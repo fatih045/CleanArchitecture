@@ -1,5 +1,10 @@
-﻿using FluentValidation;
+﻿
+using CleanArchitecture.Application.Interfaces;
+
+using CleanArchitecture.Domain.Entities;
+using FluentValidation;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -20,6 +25,13 @@ namespace CleanArchitecture.Application
 
             services.AddFluentValidationAutoValidation(); // ASP.NET Core için otomatik doğrulama
 
+            services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
+
+
+
+            //// JWT ve Authentication servisi ekleniyor
+            //services.AddScoped<IAuthenticationService, AuthenticationService>();
+            //services.AddScoped<JwtTokenGenerator>();
 
             return services;
 

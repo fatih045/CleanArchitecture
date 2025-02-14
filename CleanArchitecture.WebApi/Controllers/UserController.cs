@@ -25,6 +25,19 @@ namespace CleanArchitecture.WebApi.Controllers
             var result = await _mediator.Send(command);
             return Ok(result);
         }
+
+
+        //[HttpPost]
+        //public IActionResult CreateUser([FromBody] CreateUserCommand command)
+        //{
+        //    throw new Exception("Bu test için fırlatılmış bir hatadır.");
+        //}
+
+
+
+
+
+
         [HttpGet("{id}")]
         public async Task<IActionResult> GetUserById(Guid id)
         {

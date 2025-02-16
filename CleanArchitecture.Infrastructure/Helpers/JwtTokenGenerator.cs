@@ -34,8 +34,14 @@ namespace CleanArchitecture.Infrastructure.Helpers
                 audience: audience,
                 claims: new[]
                 {
-                    new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Name, userName),
-                    new System.Security.Claims.Claim("id", userId.ToString())
+                    //new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Name, userName),
+                 
+                 // new System.Security.Claims.Claim("id", userId.ToString())
+               
+                     new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.Name, userName),
+                    new System.Security.Claims.Claim(System.Security.Claims.ClaimTypes.NameIdentifier, userId.ToString())  // UserId'yi burada ekliyoruz
+            
+                
                 },
                 expires: DateTime.Now.AddMinutes(expiresInMinutes),
                 signingCredentials: credentials

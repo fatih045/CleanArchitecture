@@ -2,8 +2,10 @@
 using CleanArchitecture.Application.Queries.Movies;
 using CleanArchitecture.Domain.Entities;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace CleanArchitecture.WebApi.Controllers
 {
@@ -19,8 +21,15 @@ namespace CleanArchitecture.WebApi.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<IActionResult> CreateMovie([FromBody] CreateMovieCommand command)
         {
+            var userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            command.UserId = userId;
+
+
+         
+
             var result = await _mediator.Send(command);
             return Ok(result);
         }

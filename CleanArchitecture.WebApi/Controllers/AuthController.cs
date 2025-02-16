@@ -1,4 +1,5 @@
-﻿using CleanArchitecture.Application.Interfaces;
+﻿using CleanArchitecture.Application.DTOs;
+using CleanArchitecture.Application.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity.Data;
@@ -31,10 +32,41 @@ namespace CleanArchitecture.WebApi.Controllers
             return Ok(new { Token = token });
         }
 
-    }
-    public class LoginRequest
-    {
-        public string Email { get; set; }
-        public string Password { get; set; }
+
+        [HttpPost("register")]
+        public async Task<IActionResult> Register([FromBody] RegisterRequestDto request)
+        {
+            {
+                try
+                {
+                    var registerRequestDto = new RegisterRequestDto
+                    {
+                        UserName = request.UserName,
+                        Email = request.Email,
+                        Password = request.Password
+                    };
+
+                    var result = await _authenticationService.RegisterAsync(registerRequestDto);
+
+                    return Ok(result); // Successfully registered
+                }
+                catch (InvalidOperationException ex)
+                {
+                    return BadRequest(ex.Message); // Handle email already in use
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(500, "Internal Server Error: " + ex.Message); // Handle other exceptions
+                }
+            }
+
+
+        }
+        public class LoginRequest
+        {
+            public string Email { get; set; }
+            public string Password { get; set; }
+        }
     }
 }
+

@@ -10,5 +10,8 @@ namespace CleanArchitecture.Application.Interfaces
     public interface IAuthenticationService
     {
         Task<AuthenticationResultDto> AuthenticateUser(string email, string password);
+
+        Task<string> RegisterAsync( RegisterRequestDto dto);
+
     }
 }

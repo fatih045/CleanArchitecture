@@ -5,6 +5,7 @@ using CleanArchitecture.Domain.Entities;
 using CleanArchitecture.Infrastructure.Helpers;
 using Microsoft.AspNetCore.DataProtection.AuthenticatedEncryption;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,5 +52,31 @@ namespace CleanArchitecture.Infrastructure.Persistence
                 Expiration = DateTime.UtcNow.AddMinutes(60)  // Örneğin, 60 dakika geçerli
             };
         }
+
+        public async Task<string> RegisterAsync(RegisterRequestDto dto)
+          
+        {
+            var existingUser = await _unitOfWork.UserRepository.GetUserByEmailAsync(dto.Email);
+            if (existingUser != null)
+            {
+                throw new InvalidOperationException("Bu e-posta adresi zaten kullanılıyor.");
+            }
+
+            var user = new User
+            {
+                Id = Guid.NewGuid(),
+                UserName = dto.UserName,
+                Email = dto.Email
+            };
+
+            user.PasswordHash = _passwordHasher.HashPassword(user, dto.Password);
+
+            await _unitOfWork.UserRepository.AddAsync(user);
+            await _unitOfWork.SaveChangesAsync();  // Değişiklikleri kaydet
+
+            return user.Id.ToString();
+        }
+
     }
-}
+    }
+
